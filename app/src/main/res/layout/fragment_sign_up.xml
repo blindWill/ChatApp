@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".SignUpFragment"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Account"
+        android:layout_marginTop="40dp"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="@color/primary_text"
+        />
+
+    <EditText
+        android:id="@+id/etInputNickName"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/background_input"
+        android:hint="@string/nickname"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+    <EditText
+        android:id="@+id/etInputEmail"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/background_input"
+        android:hint="@string/email"
+        android:imeOptions="actionNext"
+        android:inputType="textEmailAddress"
+        android:importantForAutofill="no"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+    <EditText
+        android:id="@+id/etInputPassword"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/background_input"
+        android:hint="@string/password"
+        android:imeOptions="actionNext"
+        android:inputType="textPassword"
+        android:importantForAutofill="no"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+    <EditText
+        android:id="@+id/etConfirmPassword"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/background_input"
+        android:hint="@string/confirm_password"
+        android:imeOptions="actionNext"
+        android:inputType="textPassword"
+        android:importantForAutofill="no"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btSignUp"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/sign_up"
+        app:cornerRadius="8dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/tvSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/sign_in"
+        android:textColor="@color/primary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        />
+
+</LinearLayout>
