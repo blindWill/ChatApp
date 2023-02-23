@@ -100,10 +100,10 @@ class SignUpFragment : Fragment() {
                         binding.pbSignUp.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
-                        binding.btSignUp.visibility = View.VISIBLE
-                        binding.pbSignUp.visibility = View.INVISIBLE
                         viewModel.sendEmailVerification()
                         findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+                        binding.btSignUp.visibility = View.VISIBLE
+                        binding.pbSignUp.visibility = View.INVISIBLE
                         showToast("Verification email sent to ${viewModel.currentUser?.email}")
                     }
                     is Resource.Failure -> {

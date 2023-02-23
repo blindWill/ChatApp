@@ -32,12 +32,16 @@ class SignInFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setListeners()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setLoadingObserver()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListeners()
+
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -65,6 +69,7 @@ class SignInFragment : Fragment() {
         val user = viewModel.currentUser
         user?.reload()
         if (user != null && user.isEmailVerified) {
+            viewModel.addUserToDb()
             findNavController().navigate(R.id.action_signInFragment_to_mainScreenFragment)
         }else{
             showToast("Confirm your email")

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentMainScreenBinding
 import com.example.chatapp.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,12 +31,21 @@ class MainScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getProfileDetails()
+        setListeners()
+    }
 
-        val user = viewModel.currentUser
-
-        if (user != null) {
-            binding.tv.text = user.displayName.toString()
+    private fun setListeners(){
+        with(binding){
+            ivLogout.setOnClickListener{
+                viewModel.logout()
+                findNavController().navigate(R.id.action_mainScreenFragment_to_signInFragment)
+            }
         }
+    }
 
+    private fun getProfileDetails(){
+        val user = viewModel.currentUser
+        binding.tvNickname.text = user!!.displayName.toString()
     }
 }
