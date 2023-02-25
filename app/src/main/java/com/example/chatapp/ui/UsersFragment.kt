@@ -49,7 +49,13 @@ class UsersFragment : Fragment() {
 
     private fun setupRecycler(){
         binding.rvUsers.adapter = UsersAdapter{
-            findNavController().navigate(R.id.action_usersFragment_to_mainScreenFragment)
+            val bundle = Bundle().apply {
+                putSerializable("user", it)
+            }
+            findNavController().navigate(
+                R.id.action_usersFragment_to_chatRoomFragment,
+                bundle
+            )
         }
     }
 
