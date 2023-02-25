@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
 import com.example.chatapp.data.Resource
+import com.example.chatapp.data.User
 import com.example.chatapp.databinding.FragmentSignInBinding
 import com.example.chatapp.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,8 +72,6 @@ class SignInFragment : Fragment() {
         if (user != null && user.isEmailVerified) {
             viewModel.addUserToDb()
             findNavController().navigate(R.id.action_signInFragment_to_mainScreenFragment)
-        }else{
-            showToast("Confirm your email")
         }
     }
 
@@ -103,9 +102,9 @@ class SignInFragment : Fragment() {
                         binding.pbSignIn.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
+                        navigateIfEmailVerified()
                         binding.btSignIn.visibility = View.VISIBLE
                         binding.pbSignIn.visibility = View.INVISIBLE
-                        navigateIfEmailVerified()
                     }
                     is Resource.Failure -> {
                         binding.btSignIn.visibility = View.VISIBLE

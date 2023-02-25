@@ -41,6 +41,9 @@ class MainScreenFragment : Fragment() {
                 viewModel.logout()
                 findNavController().navigate(R.id.action_mainScreenFragment_to_signInFragment)
             }
+            fabAdd.setOnClickListener {
+                findNavController().navigate(R.id.action_mainScreenFragment_to_usersFragment)
+            }
         }
     }
 

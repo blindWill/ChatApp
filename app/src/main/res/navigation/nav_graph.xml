@@ -33,5 +33,22 @@
         <action
             android:id="@+id/action_mainScreenFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_usersFragment"
+            app:destination="@id/usersFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.example.chatapp.ui.UsersFragment"
+        android:label="fragment_users"
+        tools:layout="@layout/fragment_users" >
+        <action
+            android:id="@+id/action_usersFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatRoomFragment"
+        android:name="com.example.chatapp.ui.ChatRoomFragment"
+        android:label="fragment_chatting"
+        tools:layout="@layout/fragment_chatting" />
 </navigation>
