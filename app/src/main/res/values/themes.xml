@@ -5,5 +5,7 @@
         <item name="colorPrimary">@color/primary</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/primary</item>
+
+        <item name="android:navigationBarColor">@color/primary</item>
     </style>
 </resources>

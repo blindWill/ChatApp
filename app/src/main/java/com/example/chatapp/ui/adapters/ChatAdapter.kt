@@ -14,7 +14,7 @@ import com.example.chatapp.databinding.UserItemBinding
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
-class ChatAdapter @Inject constructor(private val auth: FirebaseAuth):
+class ChatAdapter (private val auth: FirebaseAuth):
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -81,7 +81,7 @@ class ChatAdapter @Inject constructor(private val auth: FirebaseAuth):
 
     private val differCallback = object : DiffUtil.ItemCallback<Message>() {
         override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
-            return oldItem.dateTime == newItem.dateTime
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {

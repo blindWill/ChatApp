@@ -1,9 +1,8 @@
-package com.example.chatapp
+package com.example.chatapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.chatapp.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
