@@ -1,14 +1,10 @@
 package com.example.chatapp.ui
 
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.HandlerCompat.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -31,7 +27,8 @@ class ChatRoomFragment : Fragment() {
 
     private val viewModel: ChatRoomViewModel by viewModels()
 
-    private lateinit var userReceiver: User
+    private lateinit var receiverName: String
+    private lateinit var receiverUid: String
 
     //    @Inject
 //    lateinit var chatAdapter: ChatAdapter
@@ -54,13 +51,14 @@ class ChatRoomFragment : Fragment() {
     }
 
     private fun getUserReceiver() {
-        userReceiver = arguments?.getSerializable("user") as User
-        binding.tvReceiverName.text = userReceiver.name
+        receiverName = arguments?.getSerializable("receiverName").toString()
+        receiverUid = arguments?.getSerializable("receiverUid").toString()
+        binding.tvReceiverName.text = receiverName
     }
 
 
     private fun getMessages() {
-        viewModel.getMessages(userReceiver.uid)
+        viewModel.getMessages(receiverUid)
     }
 
     private fun setListeners() {
@@ -72,7 +70,7 @@ class ChatRoomFragment : Fragment() {
                 if (etInputMessage.text.isNotEmpty()) {
                     val currentTimeInMillis = System.currentTimeMillis()
                     viewModel.sendMessage(
-                        userReceiver.uid,
+                        receiverUid,
                         etInputMessage.text.toString(),
                         currentTimeInMillis
                     )
@@ -85,8 +83,8 @@ class ChatRoomFragment : Fragment() {
 
     }
 
-    private fun setLayoutChangeListener(messageList: List<Message>){
-        binding.rvChat.addOnLayoutChangeListener(object: View.OnLayoutChangeListener{
+    private fun setLayoutChangeListener(messageList: List<Message>) {
+        binding.rvChat.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
             override fun onLayoutChange(
                 v: View?,
                 left: Int,
@@ -98,7 +96,7 @@ class ChatRoomFragment : Fragment() {
                 oldRight: Int,
                 oldBottom: Int
             ) {
-                if (messageList.isNotEmpty()){
+                if (messageList.isNotEmpty()) {
                     binding.rvChat.postDelayed({
                         binding.rvChat.smoothScrollToPosition(
                             messageList.size - 1

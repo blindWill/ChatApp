@@ -9,9 +9,13 @@ import com.example.chatapp.data.Message
 import com.example.chatapp.data.Resource
 import com.example.chatapp.repositories.DbRepository
 import com.example.chatapp.utils.Constants
+import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHAT
+import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHATROOM
+import com.example.chatapp.utils.Constants.KEY_RECEIVER_UID
 import com.example.chatapp.utils.Constants.KEY_TIMESTAMP
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -26,30 +30,38 @@ class ChatRoomViewModel @Inject constructor(
 
     val getMessagesLiveData = MutableLiveData<Resource<List<Message>>>()
 
-    fun sendMessage(receiverUid: String, message: String, currentTimeStamp: Long) = viewModelScope.launch{
-        dbRepo.addMessageToDatabase(receiverUid, message, currentTimeStamp)
-    }
+    fun sendMessage(receiverUid: String, message: String, currentTimeStamp: Long) =
+        viewModelScope.launch {
+            dbRepo.addMessageToDatabase(
+                receiverUid,
+                message,
+                currentTimeStamp,
+                getChatRoomId(receiverUid)
+            )
+        }
 
     fun getMessages(receiverUid: String) = viewModelScope.launch {
-        try{
-            db.collection(Constants.KEY_COLLECTION_CHAT).whereIn(
-                Constants.KEY_SENDER_UID, listOf( auth.currentUser?.uid, receiverUid)).addSnapshotListener { value, _ ->
-                Log.d("TAG", "4 $value")
-                val messageList = mutableListOf<Message>()
-                for (document in value!!){
-                    val message = Message(
-                        id = document.id,
-                        senderUid = document.data[Constants.KEY_SENDER_UID].toString(),
-                        receiverUid = document.data[Constants.KEY_RECEIVER_UID].toString(),
-                        dateTime = millisToHoursMinutes(document.data[KEY_TIMESTAMP].toString().toLong()) ,//document.data[KEY_TIMESTAMP].toString()
-                        message = document.data[Constants.KEY_MESSAGE].toString()
-                    )
-                    messageList.add(message)
+        try {
+            db.collection(KEY_COLLECTION_CHAT).document(getChatRoomId(receiverUid))
+                .collection(KEY_COLLECTION_CHATROOM)
+                .addSnapshotListener { value, _ ->
+                    val messageList = mutableListOf<Message>()
+                    for (document in value!!) {
+                        val message = Message(
+                            id = document.id,
+                            senderUid = document.data[Constants.KEY_SENDER_UID].toString(),
+                            receiverUid = document.data[KEY_RECEIVER_UID].toString(),
+                            dateTime = millisToHoursMinutes(
+                                document.data[KEY_TIMESTAMP].toString().toLong()
+                            ),
+                            message = document.data[Constants.KEY_MESSAGE].toString()
+                        )
+                        messageList.add(message)
 
+                    }
+                    getMessagesLiveData.postValue(Resource.Success(messageList))
                 }
-                getMessagesLiveData.postValue(Resource.Success(messageList))
-            }
-        }catch (e : Exception){
+        } catch (e: Exception) {
             getMessagesLiveData.postValue(Resource.Failure(e))
         }
     }
@@ -57,5 +69,13 @@ class ChatRoomViewModel @Inject constructor(
     private fun millisToHoursMinutes(millis: Long): String {
         val formatter = SimpleDateFormat("HH:mm", Locale.US)
         return formatter.format(millis).toString()
+    }
+
+    private fun getChatRoomId(receiverUid: String): String {
+        return if (auth.currentUser?.uid!! > receiverUid) {
+            auth.currentUser?.uid + receiverUid
+        } else {
+            receiverUid + auth.currentUser?.uid
+        }
     }
 }

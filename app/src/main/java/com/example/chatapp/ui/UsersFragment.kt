@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class UsersFragment : Fragment() {
 
     private var _binding: FragmentUsersBinding? = null
-    private val binding get() =_binding!!
+    private val binding get() = _binding!!
 
     private val viewModel: UsersViewModel by viewModels()
 
@@ -41,16 +41,17 @@ class UsersFragment : Fragment() {
         viewModel.getUsers()
     }
 
-    private fun setListeners(){
+    private fun setListeners() {
         binding.ivBack.setOnClickListener {
             findNavController().navigate(R.id.action_usersFragment_to_mainScreenFragment)
         }
     }
 
-    private fun setupRecycler(){
-        binding.rvUsers.adapter = UsersAdapter{
+    private fun setupRecycler() {
+        binding.rvUsers.adapter = UsersAdapter {
             val bundle = Bundle().apply {
-                putSerializable("user", it)
+                putSerializable("receiverName", it.name)
+                putSerializable("receiverUid", it.uid)
             }
             findNavController().navigate(
                 R.id.action_usersFragment_to_chatRoomFragment,
@@ -59,10 +60,10 @@ class UsersFragment : Fragment() {
         }
     }
 
-    private fun setObservers(){
+    private fun setObservers() {
         lifecycleScope.launchWhenStarted {
-            viewModel.getUsersFlow.collect{
-                when(it){
+            viewModel.getUsersFlow.collect {
+                when (it) {
                     is Resource.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.rvUsers.visibility = View.INVISIBLE

@@ -67,6 +67,13 @@
             android:padding="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
     </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
