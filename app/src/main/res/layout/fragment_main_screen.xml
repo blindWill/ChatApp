@@ -7,10 +7,10 @@
     android:background="@color/primary"
     tools:context=".ui.MainScreenFragment">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfile"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/background_icon"
@@ -22,21 +22,20 @@
         android:id="@+id/ivLogout"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_icon"
         android:padding="4dp"
         android:src="@drawable/ic_logout"
         android:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/ivProfile"
+        app:layout_constraintBottom_toBottomOf="@id/ivProfile"/>
 
     <TextView
         android:id="@+id/tvNickname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="6dp"
         android:ellipsize="end"
         android:gravity="center"
@@ -46,7 +45,8 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/ivLogout"
         app:layout_constraintStart_toEndOf="@+id/ivProfile"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivProfile"
+        app:layout_constraintBottom_toBottomOf="@id/ivProfile"
         tools:text="Tony" />
 
     <FrameLayout

@@ -1,20 +1,31 @@
 package com.example.chatapp.ui
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import com.example.chatapp.data.Resource
+import android.provider.MediaStore
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
+import com.example.chatapp.data.Resource
 import com.example.chatapp.databinding.FragmentSignUpBinding
 import com.example.chatapp.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
@@ -23,6 +34,8 @@ class SignUpFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: AuthViewModel by viewModels()
+
+    private lateinit var profileImageBitmap: Bitmap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +50,7 @@ class SignUpFragment : Fragment() {
         setListeners()
         setLoadingObserver()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -47,25 +61,83 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setListeners() {
-        with(binding){
+        with(binding) {
             tvSignIn.setOnClickListener {
                 findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
             }
             btSignUp.setOnClickListener {
-                signUp(etInputNickName.text.toString(), etInputEmail.text.toString(), etInputPassword.text.toString())
+                signUp(
+                    etInputNickName.text.toString(),
+                    etInputEmail.text.toString(),
+                    etInputPassword.text.toString(),
+                    profileImageBitmap
+                )
             }
+            ivProfile.setOnClickListener {
+                chooseImage()
+            }
+
         }
 
     }
 
-    private fun signUp(name: String, email: String, password: String) {
+    private fun chooseImage() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        launchSomeActivity.launch(intent)
+    }
+
+    private var launchSomeActivity = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode
+            == Activity.RESULT_OK
+        ) {
+            val data = result.data
+
+            if (data != null
+                && data.data != null
+            ) {
+                binding.tvAddImage.visibility = View.INVISIBLE
+                val selectedImageUri: Uri? = data.data
+                profileImageBitmap = selectedImageUri?.let { getCapturedImage(it) }!!
+                binding.ivProfile.setImageBitmap(
+                    profileImageBitmap
+                )
+            }
+        }
+    }
+
+    private fun getCapturedImage(selectedPhotoUri: Uri): Bitmap {
+        val bitmap = when {
+            Build.VERSION.SDK_INT < 28 -> MediaStore.Images.Media.getBitmap(
+                activity?.applicationContext?.contentResolver,
+                selectedPhotoUri
+            )
+            else -> {
+                val source = ImageDecoder.createSource(
+                    activity?.applicationContext!!.contentResolver,
+                    selectedPhotoUri
+                )
+                ImageDecoder.decodeBitmap(source)
+            }
+        }
+        return bitmap
+    }
+
+    private fun signUp(name: String, email: String, password: String, profileImageBitmap: Bitmap) {
         if (!isValidSignUpDetails()) {
             return
         }
-        viewModel.signupUser(name, email, password)
+        viewModel.signupUser(name, email, password, profileImageBitmap)
     }
+
     private fun isValidSignUpDetails(): Boolean {
-        return if (binding.etInputNickName.text.trim().isEmpty()) {
+        return if (binding.tvAddImage.isVisible){
+            showToast("Input Profile Image")
+            false
+        }else if (binding.etInputNickName.text.trim().isEmpty()) {
             showToast("Enter Nickname")
             false
         } else if (binding.etInputEmail.text.trim().isEmpty()) {
@@ -91,10 +163,10 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun setLoadingObserver(){
+    private fun setLoadingObserver() {
         lifecycleScope.launchWhenStarted {
-            viewModel.signUpFlow.collect{
-                when(it){
+            viewModel.signUpFlow.collect {
+                when (it) {
                     is Resource.Loading -> {
                         binding.btSignUp.visibility = View.GONE
                         binding.pbSignUp.visibility = View.VISIBLE

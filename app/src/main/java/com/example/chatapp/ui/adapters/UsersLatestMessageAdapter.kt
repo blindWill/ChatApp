@@ -1,15 +1,17 @@
 package com.example.chatapp.ui.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.chatapp.data.User
 import com.example.chatapp.data.UserLatestMessage
 import com.example.chatapp.databinding.UserLatestMessageItemBinding
 
-class UsersLatestMessageAdapter(val onClickListener: (item: UserLatestMessage) -> Unit) :
+class UsersLatestMessageAdapter(val context: Context, val onClickListener: (item: UserLatestMessage) -> Unit) :
     RecyclerView.Adapter<UsersLatestMessageAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,6 +34,7 @@ class UsersLatestMessageAdapter(val onClickListener: (item: UserLatestMessage) -
             with(binding) {
                 tvName.text = item.friendsName
                 tvLatestMessage.text = item.latestMessage
+                Glide.with(context).load(item.profileImageUrl).into(ivProfile)
                 root.setOnClickListener {
                     onClickListener(item)
                 }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.chatapp.R
 import com.example.chatapp.data.Resource
 import com.example.chatapp.databinding.FragmentMainScreenBinding
@@ -84,10 +85,11 @@ class MainScreenFragment : Fragment() {
 
     private fun setupRecycler() {
         // binding.rvChat.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvUsers.adapter = UsersLatestMessageAdapter {
+        binding.rvUsers.adapter = UsersLatestMessageAdapter(requireContext()) {
             val bundle = Bundle().apply {
                 putSerializable("receiverName", it.friendsName)
                 putSerializable("receiverUid", it.friendsUid)
+                putSerializable("receiverProfileImageUrl", it.profileImageUrl)
             }
             findNavController().navigate(R.id.action_mainScreenFragment_to_chatRoomFragment, bundle)
         }
@@ -95,6 +97,7 @@ class MainScreenFragment : Fragment() {
 
     private fun getProfileDetails() {
         val user = authViewModel.currentUser
+        Glide.with(this).load(user?.photoUrl).into(binding.ivProfile)
         binding.tvNickname.text = user!!.displayName.toString()
     }
 

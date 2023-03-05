@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.chatapp.data.Message
 import com.example.chatapp.data.Resource
 import com.example.chatapp.data.User
+import com.example.chatapp.utils.Constants
 import com.example.chatapp.utils.Constants.KEY_CHATROOM_NAMES
 import com.example.chatapp.utils.Constants.KEY_CHATROOM_USERS_ID
 import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHAT
@@ -13,23 +14,28 @@ import com.example.chatapp.utils.Constants.KEY_EMAIL
 import com.example.chatapp.utils.Constants.KEY_LATEST_MESSAGE
 import com.example.chatapp.utils.Constants.KEY_MESSAGE
 import com.example.chatapp.utils.Constants.KEY_NAME
+import com.example.chatapp.utils.Constants.KEY_PROFILE_IMAGES_URL
+import com.example.chatapp.utils.Constants.KEY_PROFILE_IMAGE_URL
 import com.example.chatapp.utils.Constants.KEY_RECEIVER_UID
 import com.example.chatapp.utils.Constants.KEY_SENDER_UID
 import com.example.chatapp.utils.Constants.KEY_TIMESTAMP
 import com.example.chatapp.utils.Constants.KEY_UID
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class DbRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
+    private val storage: FirebaseStorage
 ) : DbRepository {
 
     override suspend fun addUserToDatabase() {
         val currentUser = auth.currentUser
-
+        val filename = auth.currentUser?.uid
+        val storageRef = storage.getReference("${Constants.KEY_PROFILE_IMAGES}$filename")
         val isUserAlreadyInDatabase =
             db.collection(KEY_COLLECTION_USERS).document("${currentUser?.uid}").get().await()
                 .exists()
@@ -37,7 +43,8 @@ class DbRepositoryImpl @Inject constructor(
             val user = hashMapOf(
                 KEY_NAME to "${currentUser?.displayName}",
                 KEY_EMAIL to "${currentUser?.email}",
-                KEY_UID to "${currentUser?.uid}"
+                KEY_UID to "${currentUser?.uid}",
+                KEY_PROFILE_IMAGE_URL to "${storageRef.downloadUrl.await()}"
             )
             db.collection(KEY_COLLECTION_USERS)
                 .document("${currentUser?.uid}")
@@ -55,7 +62,8 @@ class DbRepositoryImpl @Inject constructor(
                 val user = User(
                     document.data[KEY_NAME].toString(),
                     document.data[KEY_EMAIL].toString(),
-                    document.data[KEY_UID].toString()
+                    document.data[KEY_UID].toString(),
+                    document.data[KEY_PROFILE_IMAGE_URL].toString()
                 )
                 usersList.add(user)
             }
@@ -82,9 +90,12 @@ class DbRepositoryImpl @Inject constructor(
         val friendName = db.collection(KEY_COLLECTION_USERS).document(receiverUid).get().await().data?.get(KEY_NAME).toString()
         val currentUserName =
             db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).get().await().data?.get(KEY_NAME).toString()
+        val currentUserStorageRef = storage.getReference("${Constants.KEY_PROFILE_IMAGES}${auth.currentUser!!.uid}")
+        val receiverStorageRef = storage.getReference("${Constants.KEY_PROFILE_IMAGES}$receiverUid")
         val chatroomInfo = hashMapOf(
             KEY_CHATROOM_NAMES to listOf(currentUserName, friendName),
             KEY_CHATROOM_USERS_ID to listOf(auth.currentUser?.uid, receiverUid),
+            KEY_PROFILE_IMAGES_URL to listOf(currentUserStorageRef.downloadUrl.await(), receiverStorageRef.downloadUrl.await()),
             KEY_LATEST_MESSAGE to message,
             KEY_TIMESTAMP to dateTime
         )

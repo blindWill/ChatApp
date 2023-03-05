@@ -23,11 +23,32 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivProfile"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:src= "@color/input_background"
+                />
+
+            <TextView
+                android:id="@+id/tvAddImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/add_image" />
+        </FrameLayout>
+
         <EditText
             android:id="@+id/etInputNickName"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/background_input"
             android:hint="@string/nickname"
             android:imeOptions="actionNext"

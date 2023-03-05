@@ -13,6 +13,4 @@ interface DbRepository  {
 
     suspend fun addMessageToDatabase(receiverUid: String, message: String, dateTime: Long, chatRoomId: String)
 
-  //  suspend fun getLatestMessages()//: Resource<List<Message>>
-
 }

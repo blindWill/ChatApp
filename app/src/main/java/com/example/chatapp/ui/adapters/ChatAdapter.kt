@@ -14,8 +14,10 @@ import com.example.chatapp.databinding.UserItemBinding
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
-class ChatAdapter (private val auth: FirebaseAuth):
+class ChatAdapter ():
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     companion object {
         const val SENT_MESSAGE = 1

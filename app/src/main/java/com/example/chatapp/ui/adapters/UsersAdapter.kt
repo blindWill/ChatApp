@@ -1,14 +1,16 @@
 package com.example.chatapp.ui.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.chatapp.data.User
 import com.example.chatapp.databinding.UserItemBinding
 
-class UsersAdapter (val onClickListener: (item: User) -> Unit) :
+class UsersAdapter (val context: Context, val onClickListener: (item: User) -> Unit) :
     RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,6 +33,7 @@ class UsersAdapter (val onClickListener: (item: User) -> Unit) :
             with(binding) {
                 tvName.text = item.name
                 tvEmail.text = item.email
+                Glide.with(context).load(item.profileImageUrl).into(ivProfile)
                 root.setOnClickListener {
                     onClickListener(item)
                 }

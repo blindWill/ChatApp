@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.chatapp.R
 import com.example.chatapp.data.Message
 import com.example.chatapp.data.Resource
@@ -27,11 +28,8 @@ class ChatRoomFragment : Fragment() {
 
     private val viewModel: ChatRoomViewModel by viewModels()
 
-    private lateinit var receiverName: String
     private lateinit var receiverUid: String
 
-    //    @Inject
-//    lateinit var chatAdapter: ChatAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,8 +49,10 @@ class ChatRoomFragment : Fragment() {
     }
 
     private fun getUserReceiver() {
-        receiverName = arguments?.getSerializable("receiverName").toString()
+        val receiverName = arguments?.getSerializable("receiverName").toString()
         receiverUid = arguments?.getSerializable("receiverUid").toString()
+        val receiverProfileImageUrl = arguments?.getSerializable("receiverProfileImageUrl").toString()
+        Glide.with(this).load(receiverProfileImageUrl).into(binding.ivProfile)
         binding.tvReceiverName.text = receiverName
     }
 
@@ -131,8 +131,7 @@ class ChatRoomFragment : Fragment() {
     }
 
     private fun setupRecycler() {
-        // binding.rvChat.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvChat.adapter = ChatAdapter(FirebaseAuth.getInstance())
+        binding.rvChat.adapter = ChatAdapter()
     }
 
     private fun showToast(message: String) {

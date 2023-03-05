@@ -1,5 +1,6 @@
 package com.example.chatapp.viewmodels
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.data.Resource
@@ -39,9 +40,9 @@ class AuthViewModel @Inject constructor(
         _signInFlow.value = result
     }
 
-    fun signupUser(name: String, email: String, password: String) = viewModelScope.launch {
+    fun signupUser(name: String, email: String, password: String, profileImage: Bitmap) = viewModelScope.launch {
         _signUpFlow.value = Resource.Loading
-        val result = authRepo.signUp(name, email, password)
+        val result = authRepo.signUp(name, email, password, profileImage)
         _signUpFlow.value = result
     }
 

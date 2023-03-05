@@ -7,6 +7,7 @@ object Constants {
     const val KEY_NAME = "name"
     const val KEY_EMAIL = "email"
     const val KEY_UID = "uid"
+    const val KEY_PROFILE_IMAGE_URL = "profileImageUrl"
     const val KEY_SENDER_UID = "senderUid"
     const val KEY_RECEIVER_UID = "receiverUid"
     const val KEY_MESSAGE = "message"
@@ -14,4 +15,6 @@ object Constants {
     const val KEY_CHATROOM_USERS_ID = "chatroomUsersId"
     const val KEY_LATEST_MESSAGE = "latestMessage"
     const val KEY_CHATROOM_NAMES = "chatroomNames"
+    const val KEY_PROFILE_IMAGES = "/profileImages/"
+    const val KEY_PROFILE_IMAGES_URL = "profileImagesUrl"
 }

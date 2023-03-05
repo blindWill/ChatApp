@@ -10,6 +10,7 @@ import com.example.chatapp.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -34,7 +35,8 @@ class MainScreenViewModel @Inject constructor(
                             latestMessage = document[Constants.KEY_LATEST_MESSAGE].toString(),
                             friendsUid = getFriendsId(document),
                             friendsName = getFriendsName(document),
-                            timestamp = document[Constants.KEY_TIMESTAMP].toString().toLong()
+                            timestamp = document[Constants.KEY_TIMESTAMP].toString().toLong(),
+                            profileImageUrl = getProfileImageUrl(document)
                         )
                         userLatestMessageList.add(userLatestMessage)
                     }
@@ -43,6 +45,15 @@ class MainScreenViewModel @Inject constructor(
                 }
         } catch (e: java.lang.Exception) {
             getLatestMessagesLiveData.postValue(Resource.Failure(e))
+        }
+    }
+
+    private fun getProfileImageUrl(document: QueryDocumentSnapshot): String{
+        val usersProfileImagesUrl: List<String> = document[Constants.KEY_PROFILE_IMAGES_URL] as List<String>
+        return if (usersProfileImagesUrl[0] == auth.currentUser?.photoUrl.toString()){
+            usersProfileImagesUrl[1]
+        }else{
+            usersProfileImagesUrl[0]
         }
     }
 

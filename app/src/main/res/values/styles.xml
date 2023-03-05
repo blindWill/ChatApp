@@ -2,7 +2,7 @@
 <resources>
     <style name="roundImageView" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-        <item name="backgroundColor">@color/white</item>
+        <item name="cornerSize">75dp</item>
+        <item name="backgroundColor">@color/primary</item>
     </style>
 </resources>
