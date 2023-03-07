@@ -39,11 +39,23 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/ivBack"
+        app:layout_constraintBottom_toTopOf="@id/tvLastSeen"
         app:layout_constraintStart_toEndOf="@id/ivProfile"
         app:layout_constraintTop_toTopOf="@id/ivBack"
         app:layout_goneMarginStart="10dp"
         tools:text="Tony Soprano" />
+
+    <TextView
+        android:id="@+id/tvLastSeen"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="5dp"
+        tools:text="2023.03.06 14:00"
+        android:textColor="@color/secondary_text"
+        app:layout_constraintTop_toBottomOf="@+id/tvReceiverName"
+        app:layout_constraintStart_toEndOf="@+id/ivProfile"
+        app:layout_constraintBottom_toTopOf="@id/rvBackgroundLayout"/>
 
 
     <FrameLayout

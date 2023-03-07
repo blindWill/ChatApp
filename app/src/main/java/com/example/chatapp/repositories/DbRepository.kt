@@ -13,4 +13,6 @@ interface DbRepository  {
 
     suspend fun addMessageToDatabase(receiverUid: String, message: String, dateTime: Long, chatRoomId: String)
 
+    suspend fun setUserAvailability(isUserAvailable: Boolean, lastSeenTimeStamp: Long)
+
 }

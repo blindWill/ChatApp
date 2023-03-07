@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/signInFragment">
+
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.chatapp.ui.SignInFragment"
@@ -12,9 +13,6 @@
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_signInFragment_to_mainScreenFragment"
-            app:destination="@id/mainScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -25,40 +23,5 @@
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/mainScreenFragment"
-        android:name="com.example.chatapp.ui.MainScreenFragment"
-        android:label="fragment_main_screen"
-        tools:layout="@layout/fragment_main_screen" >
-        <action
-            android:id="@+id/action_mainScreenFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
-        <action
-            android:id="@+id/action_mainScreenFragment_to_usersFragment"
-            app:destination="@id/usersFragment" />
-        <action
-            android:id="@+id/action_mainScreenFragment_to_chatRoomFragment"
-            app:destination="@id/chatRoomFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/usersFragment"
-        android:name="com.example.chatapp.ui.UsersFragment"
-        android:label="fragment_users"
-        tools:layout="@layout/fragment_users" >
-        <action
-            android:id="@+id/action_usersFragment_to_mainScreenFragment"
-            app:destination="@id/mainScreenFragment" />
-        <action
-            android:id="@+id/action_usersFragment_to_chatRoomFragment"
-            app:destination="@id/chatRoomFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/chatRoomFragment"
-        android:name="com.example.chatapp.ui.ChatRoomFragment"
-        android:label="fragment_chatting"
-        tools:layout="@layout/fragment_chat_room" >
-        <action
-            android:id="@+id/action_chatRoomFragment_to_mainScreenFragment"
-            app:destination="@id/mainScreenFragment" />
-    </fragment>
+
 </navigation>

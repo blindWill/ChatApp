@@ -1,25 +1,24 @@
 package com.example.chatapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.data.UserLatestMessage
 import com.example.chatapp.data.Resource
+import com.example.chatapp.repositories.DbRepository
 import com.example.chatapp.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
     private val db: FirebaseFirestore,
     private val auth: FirebaseAuth,
+    private val dbRepo: DbRepository
 ) : ViewModel() {
 
     val getLatestMessagesLiveData = MutableLiveData<Resource<List<UserLatestMessage>>>()
@@ -77,6 +76,10 @@ class MainScreenViewModel @Inject constructor(
             usersNames[0]
         }
 
+    }
+
+    fun setUserAvailability(isUserAvailable: Boolean, lastSeenTimeStamp: Long)= viewModelScope.launch{
+        dbRepo.setUserAvailability(isUserAvailable, lastSeenTimeStamp)
     }
 
 }

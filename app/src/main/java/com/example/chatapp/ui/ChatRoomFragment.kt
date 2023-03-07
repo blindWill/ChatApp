@@ -46,6 +46,7 @@ class ChatRoomFragment : Fragment() {
         setListeners()
         setObservers()
         getMessages()
+        viewModel.checkReceiverAvailability(receiverUid)
     }
 
     private fun getUserReceiver() {
@@ -125,8 +126,18 @@ class ChatRoomFragment : Fragment() {
                     binding.rvChat.visibility = View.INVISIBLE
                 }
             }
-
-
+        }
+        viewModel.getReceiverAvailability.observe(viewLifecycleOwner){
+            when(it) {
+                is Resource.Success -> {
+                    if (it.result.isUserAvailable){
+                        binding.tvLastSeen.text = "Online"
+                    } else {
+                        binding.tvLastSeen.text = "last seen at ${it.result.lastSeenDate}"
+                    }
+                }
+                else -> {}
+            }
         }
     }
 

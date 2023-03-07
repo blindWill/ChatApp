@@ -1,6 +1,8 @@
 package com.example.chatapp.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,6 +17,7 @@ import com.example.chatapp.data.Resource
 import com.example.chatapp.data.User
 import com.example.chatapp.databinding.FragmentSignInBinding
 import com.example.chatapp.viewmodels.AuthViewModel
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,11 +70,14 @@ class SignInFragment : Fragment() {
     }
 
     private fun navigateIfEmailVerified(){
-        val user = viewModel.currentUser
+        //Log.d("TAG", "${FirebaseAuth.getInstance().currentUser}")
+        val user = viewModel.currentUser//viewModel.currentUser
         user?.reload()
         if (user != null && user.isEmailVerified) {
             viewModel.addUserToDb()
-            findNavController().navigate(R.id.action_signInFragment_to_mainScreenFragment)
+            val intent = Intent(activity, ChatActivity::class.java)
+            startActivity(intent)
+           // findNavController().navigate(R.id.action_signInFragment_to_chat_nav_graph)
         }
     }
 
@@ -102,9 +108,9 @@ class SignInFragment : Fragment() {
                         binding.pbSignIn.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
-                        navigateIfEmailVerified()
                         binding.btSignIn.visibility = View.VISIBLE
                         binding.pbSignIn.visibility = View.INVISIBLE
+                        navigateIfEmailVerified()
                     }
                     is Resource.Failure -> {
                         binding.btSignIn.visibility = View.VISIBLE

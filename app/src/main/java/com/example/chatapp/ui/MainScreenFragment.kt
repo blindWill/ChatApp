@@ -1,6 +1,8 @@
 package com.example.chatapp.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import com.example.chatapp.databinding.FragmentMainScreenBinding
 import com.example.chatapp.ui.adapters.ChatAdapter
 import com.example.chatapp.ui.adapters.UsersLatestMessageAdapter
 import com.example.chatapp.viewmodels.AuthViewModel
+import com.example.chatapp.viewmodels.ChatRoomViewModel
 import com.example.chatapp.viewmodels.MainScreenViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,8 +54,12 @@ class MainScreenFragment : Fragment() {
     private fun setListeners() {
         with(binding) {
             ivLogout.setOnClickListener {
+                val currentTimeInMillis = System.currentTimeMillis()
+                mainScreenViewModel.setUserAvailability(false, currentTimeInMillis)
                 authViewModel.logout()
-                findNavController().navigate(R.id.action_mainScreenFragment_to_signInFragment)
+//                val intent = Intent(activity, MainActivity::class.java)
+//                startActivity(intent)
+                findNavController().navigate(R.id.action_mainScreenFragment_to_nav_graph)
             }
             fabAdd.setOnClickListener {
                 findNavController().navigate(R.id.action_mainScreenFragment_to_usersFragment)

@@ -1,16 +1,16 @@
 package com.example.chatapp.repositories
 
-import android.util.Log
-import com.example.chatapp.data.Message
 import com.example.chatapp.data.Resource
 import com.example.chatapp.data.User
 import com.example.chatapp.utils.Constants
+import com.example.chatapp.utils.Constants.KEY_AVAILABILITY
 import com.example.chatapp.utils.Constants.KEY_CHATROOM_NAMES
 import com.example.chatapp.utils.Constants.KEY_CHATROOM_USERS_ID
 import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHAT
 import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHATROOM
 import com.example.chatapp.utils.Constants.KEY_COLLECTION_USERS
 import com.example.chatapp.utils.Constants.KEY_EMAIL
+import com.example.chatapp.utils.Constants.KEY_LAST_SEEN_TIMESTAMP
 import com.example.chatapp.utils.Constants.KEY_LATEST_MESSAGE
 import com.example.chatapp.utils.Constants.KEY_MESSAGE
 import com.example.chatapp.utils.Constants.KEY_NAME
@@ -87,6 +87,18 @@ class DbRepositoryImpl @Inject constructor(
             KEY_TIMESTAMP to dateTime
         )
 
+        setChatroomInfo(receiverUid, message, dateTime, chatRoomId)
+
+        db.collection(KEY_COLLECTION_CHAT).document(chatRoomId)
+            .collection(KEY_COLLECTION_CHATROOM)
+            .document(dateTime.toString()).set(messageInfo)
+    }
+
+    private suspend fun setChatroomInfo(
+        receiverUid: String,
+        message: String,
+        dateTime: Long,
+        chatRoomId: String){
         val friendName = db.collection(KEY_COLLECTION_USERS).document(receiverUid).get().await().data?.get(KEY_NAME).toString()
         val currentUserName =
             db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).get().await().data?.get(KEY_NAME).toString()
@@ -100,11 +112,13 @@ class DbRepositoryImpl @Inject constructor(
             KEY_TIMESTAMP to dateTime
         )
         db.collection(KEY_COLLECTION_CHAT).document(chatRoomId).set(chatroomInfo)
-
-        db.collection(KEY_COLLECTION_CHAT).document(chatRoomId)
-            .collection(KEY_COLLECTION_CHATROOM)
-            .document(dateTime.toString()).set(messageInfo)
     }
 
-
+    override suspend fun setUserAvailability(isUserAvailable: Boolean, lastSeenTimeStamp: Long) {
+        val availabilityInfo = mapOf(
+            KEY_AVAILABILITY to isUserAvailable,
+            KEY_LAST_SEEN_TIMESTAMP to lastSeenTimeStamp
+        )
+        db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(availabilityInfo)
+    }
 }

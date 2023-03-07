@@ -66,12 +66,15 @@ class SignUpFragment : Fragment() {
                 findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
             }
             btSignUp.setOnClickListener {
-                signUp(
-                    etInputNickName.text.toString(),
-                    etInputEmail.text.toString(),
-                    etInputPassword.text.toString(),
-                    profileImageBitmap
-                )
+                if (isValidSignUpDetails()){
+                    signUp(
+                        etInputNickName.text.toString(),
+                        etInputEmail.text.toString(),
+                        etInputPassword.text.toString(),
+                        profileImageBitmap
+                    )
+                }
+
             }
             ivProfile.setOnClickListener {
                 chooseImage()
@@ -127,9 +130,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun signUp(name: String, email: String, password: String, profileImageBitmap: Bitmap) {
-        if (!isValidSignUpDetails()) {
-            return
-        }
+
         viewModel.signupUser(name, email, password, profileImageBitmap)
     }
 
