@@ -1,19 +1,20 @@
 package com.example.chatapp.di
 
-import com.example.chatapp.repositories.AuthRepository
-import com.example.chatapp.repositories.AuthRepositoryImpl
-import com.example.chatapp.repositories.DbRepository
-import com.example.chatapp.repositories.DbRepositoryImpl
+import com.example.chatapp.repositories.*
+import com.example.chatapp.utils.Constants.BASE_URL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -34,6 +35,24 @@ object AppModule {
 
     @Provides
     fun provideCloudStorage(): FirebaseStorage = FirebaseStorage.getInstance()
+
+    @Provides
+    fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiInterface(retrofit: Retrofit): NotificationAPI {
+        return retrofit.create(NotificationAPI::class.java)
+    }
 
 
 }

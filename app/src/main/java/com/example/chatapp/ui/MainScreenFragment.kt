@@ -1,8 +1,6 @@
 package com.example.chatapp.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +12,9 @@ import com.bumptech.glide.Glide
 import com.example.chatapp.R
 import com.example.chatapp.data.Resource
 import com.example.chatapp.databinding.FragmentMainScreenBinding
-import com.example.chatapp.ui.adapters.ChatAdapter
 import com.example.chatapp.ui.adapters.UsersLatestMessageAdapter
 import com.example.chatapp.viewmodels.AuthViewModel
-import com.example.chatapp.viewmodels.ChatRoomViewModel
 import com.example.chatapp.viewmodels.MainScreenViewModel
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,7 +43,13 @@ class MainScreenFragment : Fragment() {
         setListeners()
         setObservers()
         mainScreenViewModel.getRecentConversations()
+        mainScreenViewModel.updateToken()
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setListeners() {
@@ -56,6 +57,7 @@ class MainScreenFragment : Fragment() {
             ivLogout.setOnClickListener {
                 val currentTimeInMillis = System.currentTimeMillis()
                 mainScreenViewModel.setUserAvailability(false, currentTimeInMillis)
+                mainScreenViewModel.deleteToken()
                 authViewModel.logout()
 //                val intent = Intent(activity, MainActivity::class.java)
 //                startActivity(intent)

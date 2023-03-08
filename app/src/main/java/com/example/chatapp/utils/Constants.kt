@@ -19,4 +19,9 @@ object Constants {
     const val KEY_PROFILE_IMAGES = "/profileImages/"
     const val KEY_PROFILE_IMAGES_URL = "profileImagesUrl"
     const val KEY_LAST_SEEN_TIMESTAMP = "lastSeenTimestamp"
+    const val KEY_FCM_TOKEN = "fcmToken"
+
+    const val BASE_URL = "https://fcm.googleapis.com"
+    const val SERVER_KEY = "AAAAnpRw5Qw:APA91bGuXdmiFRIs0_5HMX-x2vdr-R_k6DcvYvcBDsw0P1KVBEwYJn49FtN7Gw-0BIPL5_I1tQRSTc8jln8bPvOrTIrAevByuHjm3Wbg8SPawEXpjwv97pEXT9_0kHDSV4qmF9FaQ-1u"
+    const val CONTENT_TYPE = "application/json"
 }

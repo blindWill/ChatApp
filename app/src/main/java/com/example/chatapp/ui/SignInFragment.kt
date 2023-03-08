@@ -2,7 +2,6 @@ package com.example.chatapp.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,10 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.chatapp.R
 import com.example.chatapp.data.Resource
-import com.example.chatapp.data.User
 import com.example.chatapp.databinding.FragmentSignInBinding
 import com.example.chatapp.viewmodels.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

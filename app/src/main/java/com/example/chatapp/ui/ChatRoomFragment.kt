@@ -10,13 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.chatapp.R
-import com.example.chatapp.data.Message
-import com.example.chatapp.data.Resource
-import com.example.chatapp.data.User
+import com.example.chatapp.data.*
 import com.example.chatapp.databinding.FragmentChatRoomBinding
 import com.example.chatapp.ui.adapters.ChatAdapter
 import com.example.chatapp.viewmodels.ChatRoomViewModel
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -33,7 +30,7 @@ class ChatRoomFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentChatRoomBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,6 +44,11 @@ class ChatRoomFragment : Fragment() {
         setObservers()
         getMessages()
         viewModel.checkReceiverAvailability(receiverUid)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun getUserReceiver() {
@@ -63,6 +65,7 @@ class ChatRoomFragment : Fragment() {
     }
 
     private fun setListeners() {
+
         with(binding) {
             ivBack.setOnClickListener {
                 findNavController().navigate(R.id.action_chatRoomFragment_to_mainScreenFragment)
@@ -75,6 +78,8 @@ class ChatRoomFragment : Fragment() {
                         etInputMessage.text.toString(),
                         currentTimeInMillis
                     )
+                    sendNotificationIfReceiverIsNotOnline()
+                    }
                     etInputMessage.text.clear()
                 }
 
@@ -82,6 +87,10 @@ class ChatRoomFragment : Fragment() {
 
         }
 
+    private fun sendNotificationIfReceiverIsNotOnline(){
+        if (binding.tvLastSeen.text != "Online"){
+                viewModel.sendNotification(binding.etInputMessage.text.toString(), receiverUid)
+        }
     }
 
     private fun setLayoutChangeListener(messageList: List<Message>) {

@@ -15,4 +15,10 @@ interface DbRepository  {
 
     suspend fun setUserAvailability(isUserAvailable: Boolean, lastSeenTimeStamp: Long)
 
+    suspend fun updateToken()
+
+    suspend fun deleteToken()
+
+    suspend fun getReceiverToken(receiverUid: String): String
+
 }

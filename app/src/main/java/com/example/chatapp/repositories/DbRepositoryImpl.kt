@@ -10,6 +10,7 @@ import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHAT
 import com.example.chatapp.utils.Constants.KEY_COLLECTION_CHATROOM
 import com.example.chatapp.utils.Constants.KEY_COLLECTION_USERS
 import com.example.chatapp.utils.Constants.KEY_EMAIL
+import com.example.chatapp.utils.Constants.KEY_FCM_TOKEN
 import com.example.chatapp.utils.Constants.KEY_LAST_SEEN_TIMESTAMP
 import com.example.chatapp.utils.Constants.KEY_LATEST_MESSAGE
 import com.example.chatapp.utils.Constants.KEY_MESSAGE
@@ -21,7 +22,9 @@ import com.example.chatapp.utils.Constants.KEY_SENDER_UID
 import com.example.chatapp.utils.Constants.KEY_TIMESTAMP
 import com.example.chatapp.utils.Constants.KEY_UID
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -29,7 +32,8 @@ import javax.inject.Inject
 class DbRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
-    private val storage: FirebaseStorage
+    private val storage: FirebaseStorage,
+    private val messaging: FirebaseMessaging
 ) : DbRepository {
 
     override suspend fun addUserToDatabase() {
@@ -120,5 +124,22 @@ class DbRepositoryImpl @Inject constructor(
             KEY_LAST_SEEN_TIMESTAMP to lastSeenTimeStamp
         )
         db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(availabilityInfo)
+    }
+
+    override suspend fun updateToken() {
+       // FirebaseMessaging.getInstance().subscribeToTopic("/topics/myTopic")
+        messaging.token.addOnCompleteListener {
+            db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(
+                KEY_FCM_TOKEN, it.result)
+        }
+    }
+
+    override suspend fun deleteToken() {
+        db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(KEY_FCM_TOKEN, FieldValue.delete())
+    }
+
+    override suspend fun getReceiverToken(receiverUid: String): String {
+        val task = db.collection(KEY_COLLECTION_USERS).document(receiverUid).get().await()
+        return task[KEY_FCM_TOKEN].toString()
     }
 }

@@ -1,13 +1,11 @@
 package com.example.chatapp.viewmodels
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapp.data.Resource
 import com.example.chatapp.repositories.AuthRepository
 import com.example.chatapp.repositories.DbRepository
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +30,6 @@ class AuthViewModel @Inject constructor(
 
     init {
         if (authRepo.currentUser != null) {//authRepo.currentUser
-            Log.d("TAG", "${FirebaseAuth.getInstance().currentUser}")
             _signInFlow.value = Resource.Success(authRepo.currentUser!!)
         }
     }

@@ -15,6 +15,7 @@ class ChatActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+       // FirebaseMessaging.getInstance().subscribeToTopic("/topics/myTopic")
     }
 
     override fun onPause() {

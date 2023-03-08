@@ -82,4 +82,12 @@ class MainScreenViewModel @Inject constructor(
         dbRepo.setUserAvailability(isUserAvailable, lastSeenTimeStamp)
     }
 
+    fun updateToken() = viewModelScope.launch {
+        dbRepo.updateToken()
+    }
+
+    fun deleteToken() = viewModelScope.launch {
+        dbRepo.deleteToken()
+    }
+
 }

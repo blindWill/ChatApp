@@ -41,6 +41,11 @@ class UsersFragment : Fragment() {
         viewModel.getUsers()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setListeners() {
         binding.ivBack.setOnClickListener {
             findNavController().navigate(R.id.action_usersFragment_to_mainScreenFragment)
