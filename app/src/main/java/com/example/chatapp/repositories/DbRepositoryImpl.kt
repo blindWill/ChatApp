@@ -90,29 +90,53 @@ class DbRepositoryImpl @Inject constructor(
             KEY_MESSAGE to message,
             KEY_TIMESTAMP to dateTime
         )
-        val isChatRoomInfoAlreadyExists = db.collection(KEY_COLLECTION_CHAT).document(chatRoomId).get().await().exists()
-        if(!isChatRoomInfoAlreadyExists){
+        val isChatRoomInfoAlreadyExists =
+            db.collection(KEY_COLLECTION_CHAT).document(chatRoomId).get().await().exists()
+        if (!isChatRoomInfoAlreadyExists) {
             setChatroomInfo(receiverUid, message, dateTime, chatRoomId)
+        } else {
+            updateChatroomInfo(message, dateTime, chatRoomId)
         }
         db.collection(KEY_COLLECTION_CHAT).document(chatRoomId)
             .collection(KEY_COLLECTION_CHATROOM)
             .document(dateTime.toString()).set(messageInfo)
     }
 
+    private suspend fun updateChatroomInfo(
+        message: String,
+        dateTime: Long,
+        chatRoomId: String
+    ) {
+        val chatRoomUpdate = mapOf(
+            KEY_LATEST_MESSAGE to message,
+            KEY_TIMESTAMP to dateTime
+        )
+        db.collection(KEY_COLLECTION_CHAT).document(chatRoomId).update(chatRoomUpdate)
+    }
+
     private suspend fun setChatroomInfo(
         receiverUid: String,
         message: String,
         dateTime: Long,
-        chatRoomId: String){
-        val friendName = db.collection(KEY_COLLECTION_USERS).document(receiverUid).get().await().data?.get(KEY_NAME).toString()
+        chatRoomId: String
+    ) {
+        val friendName =
+            db.collection(KEY_COLLECTION_USERS).document(receiverUid).get().await().data?.get(
+                KEY_NAME
+            ).toString()
         val currentUserName =
-            db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).get().await().data?.get(KEY_NAME).toString()
-        val currentUserStorageRef = storage.getReference("${Constants.KEY_PROFILE_IMAGES}${auth.currentUser!!.uid}")
+            db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).get()
+                .await().data?.get(KEY_NAME).toString()
+        val currentUserStorageRef =
+            storage.getReference("${Constants.KEY_PROFILE_IMAGES}${auth.currentUser!!.uid}")
         val receiverStorageRef = storage.getReference("${Constants.KEY_PROFILE_IMAGES}$receiverUid")
         val chatroomInfo = hashMapOf(
             KEY_CHATROOM_NAMES to listOf(currentUserName, friendName),
             KEY_CHATROOM_USERS_ID to listOf(auth.currentUser?.uid, receiverUid),
-            KEY_PROFILE_IMAGES_URL to listOf(currentUserStorageRef.downloadUrl.await(), receiverStorageRef.downloadUrl.await()),
+            KEY_PROFILE_IMAGES_URL to listOf(
+                currentUserStorageRef.downloadUrl.await(),
+                receiverStorageRef.downloadUrl.await()
+            ),
             KEY_LATEST_MESSAGE to message,
             KEY_TIMESTAMP to dateTime
         )
@@ -124,19 +148,22 @@ class DbRepositoryImpl @Inject constructor(
             KEY_AVAILABILITY to isUserAvailable,
             KEY_LAST_SEEN_TIMESTAMP to lastSeenTimeStamp
         )
-        db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(availabilityInfo)
+        db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid)
+            .update(availabilityInfo)
     }
 
     override suspend fun updateToken() {
-       // FirebaseMessaging.getInstance().subscribeToTopic("/topics/myTopic")
+        // FirebaseMessaging.getInstance().subscribeToTopic("/topics/myTopic")
         messaging.token.addOnCompleteListener {
             db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(
-                KEY_FCM_TOKEN, it.result)
+                KEY_FCM_TOKEN, it.result
+            )
         }
     }
 
     override suspend fun deleteToken() {
-        db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid).update(KEY_FCM_TOKEN, FieldValue.delete())
+        db.collection(KEY_COLLECTION_USERS).document(auth.currentUser!!.uid)
+            .update(KEY_FCM_TOKEN, FieldValue.delete())
     }
 
     override suspend fun getReceiverToken(receiverUid: String): String {

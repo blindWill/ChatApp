@@ -1,9 +1,9 @@
 package com.example.chatapp.di
 
+import com.example.chatapp.api.NotificationAPI
 import com.example.chatapp.repositories.*
 import com.example.chatapp.utils.Constants.BASE_URL
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -38,6 +38,9 @@ object AppModule {
 
     @Provides
     fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
+
+    @Provides
+    fun providesNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepo = impl
 
     @Provides
     @Singleton

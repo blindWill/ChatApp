@@ -110,12 +110,7 @@ class ChatRoomViewModel @Inject constructor(
                 getReceiverToken(receiverUid)
             )
             try {
-                val response = notificationRepo.postNotification(notification)
-                if (response.isSuccessful) {
-                    Log.d("TAG", "OK")
-                } else {
-                    Log.d("TAG", "NOT OK")
-                }
+                notificationRepo.postNotification(notification)
             } catch (e: Exception) {
                 Log.d("TAG", e.toString())
             }

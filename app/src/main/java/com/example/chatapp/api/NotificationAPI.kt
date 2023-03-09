@@ -1,4 +1,4 @@
-package com.example.chatapp.repositories
+package com.example.chatapp.api
 
 import com.example.chatapp.data.PushNotification
 import com.example.chatapp.utils.Constants

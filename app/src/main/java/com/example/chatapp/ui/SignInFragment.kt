@@ -75,6 +75,8 @@ class SignInFragment : Fragment() {
             authViewModel.addUserToDb()
             mainScreenViewModel.setUserAvailability(true, 0)
             findNavController().navigate(R.id.action_signInFragment_to_mainScreenFragment)
+        }else{
+            showToast("Confirm your email address")
         }
     }
 
@@ -105,8 +107,8 @@ class SignInFragment : Fragment() {
                         binding.pbSignIn.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
-//                        binding.btSignIn.visibility = View.VISIBLE
-//                        binding.pbSignIn.visibility = View.INVISIBLE
+                        binding.btSignIn.visibility = View.VISIBLE
+                        binding.pbSignIn.visibility = View.INVISIBLE
                         navigateIfEmailVerified()
                     }
                     is Resource.Failure -> {
