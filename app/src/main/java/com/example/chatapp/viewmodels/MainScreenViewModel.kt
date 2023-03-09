@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -78,15 +79,15 @@ class MainScreenViewModel @Inject constructor(
 
     }
 
-    fun setUserAvailability(isUserAvailable: Boolean, lastSeenTimeStamp: Long)= viewModelScope.launch{
+    fun setUserAvailability(isUserAvailable: Boolean, lastSeenTimeStamp: Long)= viewModelScope.launch(Dispatchers.IO){
         dbRepo.setUserAvailability(isUserAvailable, lastSeenTimeStamp)
     }
 
-    fun updateToken() = viewModelScope.launch {
+    fun updateToken() = viewModelScope.launch(Dispatchers.IO) {
         dbRepo.updateToken()
     }
 
-    fun deleteToken() = viewModelScope.launch {
+    fun deleteToken() = viewModelScope.launch(Dispatchers.IO) {
         dbRepo.deleteToken()
     }
 

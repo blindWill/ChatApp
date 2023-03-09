@@ -59,9 +59,7 @@ class MainScreenFragment : Fragment() {
                 mainScreenViewModel.setUserAvailability(false, currentTimeInMillis)
                 mainScreenViewModel.deleteToken()
                 authViewModel.logout()
-//                val intent = Intent(activity, MainActivity::class.java)
-//                startActivity(intent)
-                findNavController().navigate(R.id.action_mainScreenFragment_to_nav_graph)
+                findNavController().navigate(R.id.action_mainScreenFragment_to_signInFragment)
             }
             fabAdd.setOnClickListener {
                 findNavController().navigate(R.id.action_mainScreenFragment_to_usersFragment)
@@ -71,7 +69,6 @@ class MainScreenFragment : Fragment() {
 
     private fun setObservers() {
         mainScreenViewModel.getLatestMessagesLiveData.observe(viewLifecycleOwner) {
-            //Log.d("TAG", "5 ${it.toString()}")
             when (it) {
                 is Resource.Success -> {
                     (binding.rvUsers.adapter as UsersLatestMessageAdapter).differ.submitList(it.result)
@@ -93,12 +90,11 @@ class MainScreenFragment : Fragment() {
     }
 
     private fun setupRecycler() {
-        // binding.rvChat.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvUsers.adapter = UsersLatestMessageAdapter(requireContext()) {
             val bundle = Bundle().apply {
-                putSerializable("receiverName", it.friendsName)
-                putSerializable("receiverUid", it.friendsUid)
-                putSerializable("receiverProfileImageUrl", it.profileImageUrl)
+                putString("receiverName", it.friendsName)
+                putString("receiverUid", it.friendsUid)
+                putString("receiverProfileImageUrl", it.profileImageUrl)
             }
             findNavController().navigate(R.id.action_mainScreenFragment_to_chatRoomFragment, bundle)
         }

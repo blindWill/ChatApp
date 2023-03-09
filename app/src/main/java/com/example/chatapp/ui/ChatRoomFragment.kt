@@ -52,9 +52,9 @@ class ChatRoomFragment : Fragment() {
     }
 
     private fun getUserReceiver() {
-        val receiverName = arguments?.getSerializable("receiverName").toString()
-        receiverUid = arguments?.getSerializable("receiverUid").toString()
-        val receiverProfileImageUrl = arguments?.getSerializable("receiverProfileImageUrl").toString()
+        val receiverName = arguments?.getString("receiverName")
+        receiverUid = arguments?.getString("receiverUid")!!
+        val receiverProfileImageUrl = arguments?.getString("receiverProfileImageUrl")
         Glide.with(this).load(receiverProfileImageUrl).into(binding.ivProfile)
         binding.tvReceiverName.text = receiverName
     }
@@ -88,33 +88,21 @@ class ChatRoomFragment : Fragment() {
         }
 
     private fun sendNotificationIfReceiverIsNotOnline(){
-        if (binding.tvLastSeen.text != "Online"){
+        if (binding.tvLastSeen.text != resources.getString(R.string.online)){
                 viewModel.sendNotification(binding.etInputMessage.text.toString(), receiverUid)
         }
     }
 
     private fun setLayoutChangeListener(messageList: List<Message>) {
-        binding.rvChat.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
-            override fun onLayoutChange(
-                v: View?,
-                left: Int,
-                top: Int,
-                right: Int,
-                bottom: Int,
-                oldLeft: Int,
-                oldTop: Int,
-                oldRight: Int,
-                oldBottom: Int
-            ) {
-                if (messageList.isNotEmpty()) {
-                    binding.rvChat.postDelayed({
-                        binding.rvChat.smoothScrollToPosition(
-                            messageList.size - 1
-                        )
-                    }, 100)
-                }
+        binding.rvChat.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            if (messageList.isNotEmpty()) {
+                binding.rvChat.postDelayed({
+                    binding.rvChat.smoothScrollToPosition(
+                        messageList.size - 1
+                    )
+                }, 100)
             }
-        })
+        }
     }
 
     private fun setObservers() {
@@ -140,9 +128,10 @@ class ChatRoomFragment : Fragment() {
             when(it) {
                 is Resource.Success -> {
                     if (it.result.isUserAvailable){
-                        binding.tvLastSeen.text = "Online"
+                        binding.tvLastSeen.setText(R.string.online)
                     } else {
-                        binding.tvLastSeen.text = "last seen at ${it.result.lastSeenDate}"
+                        val lastSeen = resources.getString(R.string.last_seen_at).plus(" ${it.result.lastSeenDate}")
+                        binding.tvLastSeen.text = lastSeen
                     }
                 }
                 else -> {}

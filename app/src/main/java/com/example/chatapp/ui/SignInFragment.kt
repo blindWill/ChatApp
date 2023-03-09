@@ -1,6 +1,5 @@
 package com.example.chatapp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -15,6 +14,7 @@ import com.example.chatapp.R
 import com.example.chatapp.data.Resource
 import com.example.chatapp.databinding.FragmentSignInBinding
 import com.example.chatapp.viewmodels.AuthViewModel
+import com.example.chatapp.viewmodels.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +23,9 @@ class SignInFragment : Fragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() =_binding!!
 
-    private val viewModel: AuthViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
+
+    private val mainScreenViewModel: MainScreenViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,18 +65,16 @@ class SignInFragment : Fragment() {
         if (!isValidSignInDetails()) {
             return
         }
-        viewModel.loginUser(email, password)
+        authViewModel.loginUser(email, password)
     }
 
     private fun navigateIfEmailVerified(){
-        //Log.d("TAG", "${FirebaseAuth.getInstance().currentUser}")
-        val user = viewModel.currentUser//viewModel.currentUser
+        val user = authViewModel.currentUser
         user?.reload()
         if (user != null && user.isEmailVerified) {
-            viewModel.addUserToDb()
-            val intent = Intent(activity, ChatActivity::class.java)
-            startActivity(intent)
-           // findNavController().navigate(R.id.action_signInFragment_to_chat_nav_graph)
+            authViewModel.addUserToDb()
+            mainScreenViewModel.setUserAvailability(true, 0)
+            findNavController().navigate(R.id.action_signInFragment_to_mainScreenFragment)
         }
     }
 
@@ -98,15 +98,15 @@ class SignInFragment : Fragment() {
 
     private fun setLoadingObserver(){
         lifecycleScope.launchWhenStarted {
-            viewModel.signInFlow.collect{
+            authViewModel.signInFlow.collect{
                 when(it){
                     is Resource.Loading ->{
                         binding.btSignIn.visibility = View.GONE
                         binding.pbSignIn.visibility = View.VISIBLE
                     }
                     is Resource.Success -> {
-                        binding.btSignIn.visibility = View.VISIBLE
-                        binding.pbSignIn.visibility = View.INVISIBLE
+//                        binding.btSignIn.visibility = View.VISIBLE
+//                        binding.pbSignIn.visibility = View.INVISIBLE
                         navigateIfEmailVerified()
                     }
                     is Resource.Failure -> {

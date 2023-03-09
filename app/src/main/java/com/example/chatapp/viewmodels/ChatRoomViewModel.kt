@@ -37,7 +37,7 @@ class ChatRoomViewModel @Inject constructor(
     val getReceiverAvailability = MutableLiveData<Resource<UserAvailability>>()
 
     fun sendMessage(receiverUid: String, message: String, currentTimeStamp: Long) =
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dbRepo.addMessageToDatabase(
                 receiverUid,
                 message,
@@ -57,7 +57,7 @@ class ChatRoomViewModel @Inject constructor(
                             id = document.id,
                             senderUid = document.data[Constants.KEY_SENDER_UID].toString(),
                             receiverUid = document.data[KEY_RECEIVER_UID].toString(),
-                            dateTime = millisToHoursMinutes(
+                            dateTime = millisToDate(
                                 document.data[KEY_TIMESTAMP].toString().toLong()
                             ),
                             message = document.data[Constants.KEY_MESSAGE].toString()
@@ -79,7 +79,7 @@ class ChatRoomViewModel @Inject constructor(
                     val userAvailability = UserAvailability(
                         isUserAvailable = value?.data?.get(KEY_AVAILABILITY)?.toString()
                             .toBoolean(),
-                        lastSeenDate = millisToHoursMinutes(
+                        lastSeenDate = millisToDate(
                             value?.data?.get(KEY_LAST_SEEN_TIMESTAMP).toString().toLong()
                         )
                     )
@@ -90,7 +90,7 @@ class ChatRoomViewModel @Inject constructor(
         }
     }
 
-    private fun millisToHoursMinutes(millis: Long): String {
+    private fun millisToDate(millis: Long): String {
         val formatter = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.US)
         return formatter.format(millis).toString()
     }
@@ -104,7 +104,7 @@ class ChatRoomViewModel @Inject constructor(
     }
 
     fun sendNotification(message: String, receiverUid: String) =
-        CoroutineScope(Dispatchers.IO).launch {
+       viewModelScope.launch(Dispatchers.IO) {
             val notification = PushNotification(
                 NotificationData(auth.currentUser?.displayName!!, message),
                 getReceiverToken(receiverUid)

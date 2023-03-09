@@ -8,6 +8,7 @@ import com.example.chatapp.repositories.AuthRepository
 import com.example.chatapp.repositories.DbRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,7 +57,7 @@ class AuthViewModel @Inject constructor(
         _signUpFlow.value = null
     }
 
-    fun addUserToDb() = viewModelScope.launch {
+    fun addUserToDb() = viewModelScope.launch(Dispatchers.IO) {
         dbRepo.addUserToDatabase()
     }
 

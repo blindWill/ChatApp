@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:backgroundTint="@color/primary"
-        android:contentDescription="Add a new user to chat with"
+        android:contentDescription="@string/add_a_new_user_to_chat_with"
         android:src="@drawable/ic_add"
         app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

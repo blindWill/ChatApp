@@ -90,9 +90,10 @@ class DbRepositoryImpl @Inject constructor(
             KEY_MESSAGE to message,
             KEY_TIMESTAMP to dateTime
         )
-
-        setChatroomInfo(receiverUid, message, dateTime, chatRoomId)
-
+        val isChatRoomInfoAlreadyExists = db.collection(KEY_COLLECTION_CHAT).document(chatRoomId).get().await().exists()
+        if(!isChatRoomInfoAlreadyExists){
+            setChatroomInfo(receiverUid, message, dateTime, chatRoomId)
+        }
         db.collection(KEY_COLLECTION_CHAT).document(chatRoomId)
             .collection(KEY_COLLECTION_CHATROOM)
             .document(dateTime.toString()).set(messageInfo)

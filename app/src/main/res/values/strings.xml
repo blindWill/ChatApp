@@ -16,4 +16,7 @@
     <string name="select_user">Select User</string>
     <string name="add_image">Add image</string>
     <string name="set_profile_image">Set profile image</string>
+    <string name="last_seen_at">last seen at </string>
+    <string name="online">online</string>
+    <string name="add_a_new_user_to_chat_with">Add a new user to chat with</string>
 </resources>

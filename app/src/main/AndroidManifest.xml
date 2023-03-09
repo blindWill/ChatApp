@@ -26,13 +26,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.ChatActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
-
-        </activity>
-
         <service
             android:name=".firebase.MessagingService"
             android:permission="com.google.android.c2dm.permission.SEND"

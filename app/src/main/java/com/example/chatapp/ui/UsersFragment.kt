@@ -55,9 +55,9 @@ class UsersFragment : Fragment() {
     private fun setupRecycler() {
         binding.rvUsers.adapter = UsersAdapter(requireContext()) {
             val bundle = Bundle().apply {
-                putSerializable("receiverName", it.name)
-                putSerializable("receiverUid", it.uid)
-                putSerializable("receiverProfileImageUrl", it.profileImageUrl)
+                putString("receiverName", it.name)
+                putString("receiverUid", it.uid)
+                putString("receiverProfileImageUrl", it.profileImageUrl)
             }
             findNavController().navigate(
                 R.id.action_usersFragment_to_chatRoomFragment,
